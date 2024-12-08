@@ -3,6 +3,8 @@ import 'package:freedom/home/playSong.dart';
 import 'package:freedom/onboarding/signup.dart';
 
 import 'home/search.dart';
+import 'onboarding/root.dart';
+import 'onboarding/signInWallet.dart';
 import 'onboarding/signin.dart';
 
 void main() {
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         "/signup": (context) => const SignupScreen(),
         "/signin": (context) => const SignInPage(),
         "/search": (context) => const SearchSongScreen(),
+        "/signinWallet": (context) => const SignInWalletPage(),
 
       },
       title: 'Freedom Music streaming',
@@ -107,21 +110,5 @@ class MyApp extends StatelessWidget {
       ),
       // home: const Root(),
     );
-  }
-}
-
-class Root extends StatefulWidget {
-  const Root({super.key});
-
-  @override
-  State<Root> createState() => _RootState();
-}
-
-class _RootState extends State<Root> {
-  @override
-  Widget build(BuildContext context) {
-    bool isAuth = false;
-
-    return isAuth ? SearchSongScreen() : SignupScreen();
   }
 }

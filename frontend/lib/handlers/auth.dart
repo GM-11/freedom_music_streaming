@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 class Auth {
-  final Dio _dio = Dio();
 
   Future signUp(String name, String email, String password) async {
     String url =

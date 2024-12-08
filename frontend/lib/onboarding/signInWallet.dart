@@ -1,54 +1,25 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
-import '../handlers/auth.dart';
-
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SignInWalletPage extends StatefulWidget {
+  const SignInWalletPage({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SignInWalletPage> createState() => _SignInWalletPageState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final _formSignUpKey = GlobalKey<FormState>();
-
-  final _name = TextEditingController();
-  final _email = TextEditingController();
+class _SignInWalletPageState extends State<SignInWalletPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _privateKey = TextEditingController();
   final _password = TextEditingController();
-
+  final _email = TextEditingController();
+  final _name = TextEditingController();
   bool showPassword = false;
-  final Auth _auth = Auth();
 
-  Future<void> _signUp() async {
-    log(_formSignUpKey.currentState.toString());
+  void _login() {
+    if (_formKey.currentState!.validate()) {
+      // Handle login logic here
 
-    if (!_formSignUpKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Sign up unsuccessful!'),
-          backgroundColor: Color(0xFF121212),
-        ),
-      );
-    }
-
-    var user = await _auth.signUp(
-        _name.text.trim(), _email.text.trim(), _password.text.trim());
-    if(user["error"] == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Sign up successful!'),
-          backgroundColor: Color(0xFF121212),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(
-          content: Text(user["error"]),
-          backgroundColor: const Color(0xFF121212),
-        ),
-      );
+      // Perform login with privateKey or mnemonic and password
     }
   }
 
@@ -56,21 +27,21 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up', style: TextStyle(color: Colors.white, fontSize: 24)),
+
+        title: const Text('Sign In Wallet', style: TextStyle(color: Colors.white, fontSize: 24)),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formSignUpKey,
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               TextFormField(
-                style: const TextStyle(color: Colors.white),
                 controller: _name,
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "Name",
                   labelStyle: TextStyle(color: Colors.grey[400]),
@@ -102,7 +73,6 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter your email";
@@ -112,6 +82,30 @@ class _SignupScreenState extends State<SignupScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
+
+
+              TextFormField(
+                controller: _privateKey,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: "Private Key",
+                  labelStyle: TextStyle(color: Colors.grey[400]),
+                  filled: true,
+                  fillColor: const Color(0xFF1E1E1E),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your private key";
+                  }
+                  return null;
+                },
+              ),
+
               const SizedBox(height: 16),
               TextFormField(
                 obscureText: !showPassword,
@@ -150,7 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _signUp,
+                  onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
@@ -158,7 +152,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                   child: const Text(
-                    'Sign Up',
+                    'Sign In',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -166,29 +160,38 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already have an account? ",
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/signup');
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: Colors.grey[400],
                         ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, "/signin"); // Navigate to Login Screen
-                    },
-                    child: Text(
-                      "Login",
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Colors.grey[400],
-                          ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/signin');
+                      },
+                      child: Text(
+                        "Sign In",
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),
